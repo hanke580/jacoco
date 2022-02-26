@@ -15,7 +15,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.jacoco</groupId>
+    <groupId>org.zlab</groupId>
     <artifactId>org.jacoco.tests</artifactId>
     <version>0.8.8-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
@@ -53,7 +53,7 @@
           </goals>
           <settingsFile>it/settings.xml</settingsFile>
           <extraArtifacts>
-            <extraArtifact>org.jacoco:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
+            <extraArtifact>org.zlab:org.jacoco.agent:${project.version}:jar:runtime</extraArtifact>
           </extraArtifacts>
         </configuration>
         <executions>

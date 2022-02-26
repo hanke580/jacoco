@@ -185,7 +185,7 @@ public final class AgentOptions {
 
 	/**
 	 * Specifies whether the agent should expose functionality via JMX under the
-	 * name "org.jacoco:type=Runtime". Default is <code>false</code>.
+	 * name "org.zlab:type=Runtime". Default is <code>false</code>.
 	 */
 	public static final String JMX = "jmx";
 

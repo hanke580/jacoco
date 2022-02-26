@@ -143,7 +143,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 		agent.startup();
 
-		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+		ObjectName objectName = new ObjectName("org.zlab:type=Runtime");
 		final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 		assertEquals(JaCoCo.VERSION,
 				server.getAttribute(objectName, "Version"));
@@ -159,7 +159,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 		agent.startup();
 
-		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+		ObjectName objectName = new ObjectName("org.zlab:type=Runtime");
 
 		try {
 			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);
@@ -229,7 +229,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 
 		agent.shutdown();
 
-		ObjectName objectName = new ObjectName("org.jacoco:type=Runtime");
+		ObjectName objectName = new ObjectName("org.zlab:type=Runtime");
 
 		try {
 			ManagementFactory.getPlatformMBeanServer().getMBeanInfo(objectName);

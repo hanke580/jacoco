@@ -27,7 +27,7 @@ import org.jacoco.agent.rt.IAgent;
  */
 class JmxRegistration implements Callable<Void> {
 
-	private static final String JMX_NAME = "org.jacoco:type=Runtime";
+	private static final String JMX_NAME = "org.zlab:type=Runtime";
 
 	private final MBeanServer server;
 	private final ObjectName name;
