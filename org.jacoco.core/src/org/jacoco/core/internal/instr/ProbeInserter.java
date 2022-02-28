@@ -74,25 +74,48 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	public void insertProbe(final int id) {
 
-		// For a probe we set the corresponding position in the boolean[] array
-		// to true.
+		// For a probe we set the corresponding position in the int[] array
+		// to probe[id] + 1.
 
 		mv.visitVarInsn(Opcodes.ALOAD, variable);
 
-		// Stack[0]: [Z
+		// Stack[0]: [I probe[]
 
 		InstrSupport.push(mv, id);
 
-		// Stack[1]: I
-		// Stack[0]: [Z
+		// Stack[1]: I id
+		// Stack[0]: [I probe[]
+
+		mv.visitInsn(Opcodes.DUP2);
+
+		// Stack[3]: I id
+		// Stack[2]: [I probe[]
+		// Stack[1]: I id
+		// Stack[0]: [I probe[]
+
+		mv.visitInsn(Opcodes.IALOAD);
+
+		// Stack[2]: I probe[id]
+		// Stack[1]: I id
+		// Stack[0]: [I probe[]
 
 		mv.visitInsn(Opcodes.ICONST_1);
 
-		// Stack[2]: I
-		// Stack[1]: I
-		// Stack[0]: [Z
+		// Stack[3]: I 1
+		// Stack[2]: I probe[id]
+		// Stack[1]: I id
+		// Stack[0]: [I probe[]
 
-		mv.visitInsn(Opcodes.BASTORE);
+		mv.visitInsn(Opcodes.IADD);
+
+		// Stack[2]: I probe[id] + 1
+		// Stack[1]: I id
+		// Stack[0]: [I probe[]
+
+		// use IASTORE for [I
+		mv.visitInsn(Opcodes.IASTORE);
+
+		// Stack: empty
 	}
 
 	@Override
@@ -144,7 +167,7 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// original stack size depending on the probe locations. The accessor
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
-		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
+		final int increasedStack = Math.max(maxStack + 4, accessorStackSize);
 		mv.visitMaxs(increasedStack, maxLocals + 1);
 	}
 

@@ -34,7 +34,7 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		implements IFilterContext {
 
 	private final ClassCoverageImpl coverage;
-	private final boolean[] probes;
+	private final int[] probes;
 	private final StringPool stringPool;
 
 	private final Set<String> classAnnotations = new HashSet<String>();
@@ -55,8 +55,8 @@ public class ClassAnalyzer extends ClassProbesVisitor
 	 * @param stringPool
 	 *            shared pool to minimize the number of {@link String} instances
 	 */
-	public ClassAnalyzer(final ClassCoverageImpl coverage,
-			final boolean[] probes, final StringPool stringPool) {
+	public ClassAnalyzer(final ClassCoverageImpl coverage, final int[] probes,
+			final StringPool stringPool) {
 		this.coverage = coverage;
 		this.probes = probes;
 		this.stringPool = stringPool;

@@ -34,7 +34,7 @@ public class InstructionsBuilderTest {
 
 	@Before
 	public void setup() {
-		builder = new InstructionsBuilder(new boolean[] { false, true });
+		builder = new InstructionsBuilder(new int[] { 0, 1 });
 	}
 
 	@Test

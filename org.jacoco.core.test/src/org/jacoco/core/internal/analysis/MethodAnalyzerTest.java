@@ -44,7 +44,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private int nextProbeId;
 
-	private boolean[] probes;
+	private int[] probes;
 
 	private MethodNode method;
 

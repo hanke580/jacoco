@@ -78,7 +78,7 @@ public final class InstrSupport {
 	 * Data type of the field that stores coverage information for a class (
 	 * <code>boolean[]</code>).
 	 */
-	public static final String DATAFIELD_DESC = "[Z";
+	public static final String DATAFIELD_DESC = "[I";
 
 	// === Init Method ===
 
@@ -90,7 +90,7 @@ public final class InstrSupport {
 	/**
 	 * Descriptor of the initialization method.
 	 */
-	public static final String INITMETHOD_DESC = "()[Z";
+	public static final String INITMETHOD_DESC = "()[I";
 
 	/**
 	 * Access modifiers of the initialization method.

@@ -18,8 +18,8 @@ import java.util.Arrays;
 
 /**
  * Execution data for a single Java class. While instances are immutable care
- * has to be taken about the probe data array of type <code>boolean[]</code>
- * which can be modified.
+ * has to be taken about the probe data array of type <code>int[]</code> which
+ * can be modified.
  */
 public final class ExecutionData {
 
@@ -27,7 +27,7 @@ public final class ExecutionData {
 
 	private final String name;
 
-	private final boolean[] probes;
+	private final int[] probes;
 
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data.
@@ -39,8 +39,7 @@ public final class ExecutionData {
 	 * @param probes
 	 *            probe data
 	 */
-	public ExecutionData(final long id, final String name,
-			final boolean[] probes) {
+	public ExecutionData(final long id, final String name, final int[] probes) {
 		this.id = id;
 		this.name = name;
 		this.probes = probes;
@@ -61,7 +60,7 @@ public final class ExecutionData {
 			final int probeCount) {
 		this.id = id;
 		this.name = name;
-		this.probes = new boolean[probeCount];
+		this.probes = new int[probeCount];
 	}
 
 	/**
@@ -89,7 +88,7 @@ public final class ExecutionData {
 	 *
 	 * @return probe data
 	 */
-	public boolean[] getProbes() {
+	public int[] getProbes() {
 		return probes;
 	}
 
@@ -97,7 +96,7 @@ public final class ExecutionData {
 	 * Sets all probes to <code>false</code>.
 	 */
 	public void reset() {
-		Arrays.fill(probes, false);
+		Arrays.fill(probes, 0);
 	}
 
 	/**
@@ -106,8 +105,8 @@ public final class ExecutionData {
 	 * @return <code>true</code>, if at least one probe has been hit
 	 */
 	public boolean hasHits() {
-		for (final boolean p : probes) {
-			if (p) {
+		for (final int p : probes) {
+			if (p != 0) {
 				return true;
 			}
 		}
@@ -157,12 +156,16 @@ public final class ExecutionData {
 	 *            merge mode
 	 */
 	public void merge(final ExecutionData other, final boolean flag) {
+		// FIXME just do sum for merge int[] array if flag = true
+		// else overwrite current probes
 		assertCompatibility(other.getId(), other.getName(),
 				other.getProbes().length);
-		final boolean[] otherData = other.getProbes();
+		final int[] otherData = other.getProbes();
 		for (int i = 0; i < probes.length; i++) {
-			if (otherData[i]) {
-				probes[i] = flag;
+			if (flag) {
+				probes[i] += otherData[i];
+			} else {
+				probes[i] = otherData[i];
 			}
 		}
 	}

@@ -30,14 +30,14 @@ public class ExecutionDataTest {
 		assertEquals(5, e.getId());
 		assertEquals("Example", e.getName());
 		assertEquals(3, e.getProbes().length);
-		assertFalse(e.getProbes()[0]);
-		assertFalse(e.getProbes()[1]);
-		assertFalse(e.getProbes()[2]);
+		assertFalse(e.getProbes()[0] !=0 );
+		assertFalse(e.getProbes()[1] !=0);
+		assertFalse(e.getProbes()[2] !=0 );
 	}
 
 	@Test
 	public void testGetters() {
-		final boolean[] data = new boolean[0];
+		final int[] data = new int[0];
 		final ExecutionData e = new ExecutionData(5, "Example", data);
 		assertEquals(5, e.getId());
 		assertEquals("Example", e.getName());
@@ -47,19 +47,19 @@ public class ExecutionDataTest {
 	@Test
 	public void testReset() {
 		final ExecutionData e = new ExecutionData(5, "Example",
-				new boolean[] { true, false, true });
+				new int[] { 1, 0, 1 });
 		e.reset();
-		assertFalse(e.getProbes()[0]);
-		assertFalse(e.getProbes()[1]);
-		assertFalse(e.getProbes()[2]);
+		assertFalse(e.getProbes()[0] !=0 );
+		assertFalse(e.getProbes()[1] !=0 );
+		assertFalse(e.getProbes()[2] !=0 );
 	}
 
 	@Test
 	public void testHasHits() {
-		final boolean[] probes = new boolean[] { false, false, false };
+		final int[] probes = new int[] { 0, 0, 0 };
 		final ExecutionData e = new ExecutionData(5, "Example", probes);
 		assertFalse(e.hasHits());
-		probes[1] = true;
+		probes[1] = 1;
 		assertTrue(e.hasHits());
 	}
 

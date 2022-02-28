@@ -95,14 +95,15 @@
         <exclude>${project.groupId}:org.jacoco.ant:*:nodeps</exclude>
       </excludes>
     </dependencySet>
-    <dependencySet>
-      <outputDirectory>/doc</outputDirectory>
-      <unpack>true</unpack>
-      <useProjectArtifact>false</useProjectArtifact>
-      <includes>
-        <include>${project.groupId}:org.jacoco.examples:zip</include>
-      </includes>
-    </dependencySet>
+    <!-- FIXME failed to build tests and docs (boolean[] probes -> int[] probes)-->
+    <!-- <dependencySet> -->
+    <!--   <outputDirectory>/doc</outputDirectory> -->
+    <!--   <unpack>true</unpack> -->
+    <!--   <useProjectArtifact>false</useProjectArtifact> -->
+    <!--   <includes> -->
+    <!--     <include>${project.groupId}:org.jacoco.examples:zip</include> -->
+    <!--   </includes> -->
+    <!-- </dependencySet> -->
     <dependencySet>
       <outputDirectory>/doc/api</outputDirectory>
       <unpack>true</unpack>

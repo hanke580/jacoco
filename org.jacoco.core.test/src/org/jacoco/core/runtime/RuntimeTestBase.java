@@ -80,9 +80,9 @@ public abstract class RuntimeTestBase {
 		generateAndInstantiateClass(1001).a();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001).getProbes();
-		assertTrue(data[0]);
-		assertFalse(data[1]);
+		final int[] data = storage.getData(1001).getProbes();
+		assertTrue(data[0] != 0);
+		assertFalse(data[1] != 0);
 	}
 
 	@Test
@@ -92,9 +92,9 @@ public abstract class RuntimeTestBase {
 		generateAndInstantiateClass(1001).b();
 		data.collect(storage, storage, false);
 		storage.assertSize(1);
-		final boolean[] data = storage.getData(1001).getProbes();
-		assertTrue(data[0]);
-		assertTrue(data[1]);
+		final int[] data = storage.getData(1001).getProbes();
+		assertTrue(data[0] != 0);
+		assertTrue(data[1] != 0);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public abstract class RuntimeTestBase {
 		 *
 		 * @return the probe array
 		 */
-		boolean[] get();
+		int[] get();
 
 		/**
 		 * The implementation will mark probe 0 as executed

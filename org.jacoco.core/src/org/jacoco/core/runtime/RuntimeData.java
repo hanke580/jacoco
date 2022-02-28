@@ -93,6 +93,19 @@ public class RuntimeData {
 	}
 
 	/**
+	 * Write SessionInfo {@link IExecutionDataVisitor} object.
+	 *
+	 * @param sessionInfoVisitor
+	 *            handler to write session information to
+	 */
+	public final void writeSessionInfo(
+			final ISessionInfoVisitor sessionInfoVisitor) {
+		final SessionInfo info = new SessionInfo(sessionId, startTimeStamp,
+				System.currentTimeMillis());
+		sessionInfoVisitor.visitSessionInfo(info);
+	}
+
+	/**
 	 * Resets all coverage information.
 	 */
 	public final void reset() {

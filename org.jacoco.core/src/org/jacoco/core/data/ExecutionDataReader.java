@@ -107,6 +107,7 @@ public class ExecutionDataReader {
 	protected boolean readBlock(final byte blocktype) throws IOException {
 		switch (blocktype) {
 		case ExecutionDataWriter.BLOCK_HEADER:
+			System.out.println("read header");
 			readHeader();
 			return true;
 		case ExecutionDataWriter.BLOCK_SESSIONINFO:
@@ -147,7 +148,7 @@ public class ExecutionDataReader {
 		}
 		final long id = in.readLong();
 		final String name = in.readUTF();
-		final boolean[] probes = in.readBooleanArray();
+		final int[] probes = in.readIntArray();
 		executionDataVisitor
 				.visitClassExecution(new ExecutionData(id, name, probes));
 	}

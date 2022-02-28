@@ -266,14 +266,14 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	@Test
 	public void reset_should_reset_probes() {
 		Agent agent = createAgent();
-		boolean[] probes = agent.getData()
+		int[] probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
-		probes[0] = true;
+		probes[0] = 1;
 
 		agent.reset();
 
-		assertFalse(probes[0]);
+		assertFalse(probes[0] != 0);
 	}
 
 	@Test
@@ -282,7 +282,7 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 		Agent agent = createAgent();
 		agent.startup();
 		agent.getData().getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
-				.getProbes()[0] = true;
+				.getProbes()[0] = 1;
 
 		byte[] data = agent.getExecutionData(true);
 
@@ -299,14 +299,14 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
-		final boolean[] probes = agent.getData()
+		final int[] probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
-		probes[0] = true;
+		probes[0] = 1;
 
 		agent.getExecutionData(true);
 
-		assertFalse(probes[0]);
+		assertFalse(probes[0] != 0);
 	}
 
 	@Test
@@ -314,14 +314,14 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 			throws Exception {
 		Agent agent = createAgent();
 		agent.startup();
-		final boolean[] probes = agent.getData()
+		final int[] probes = agent.getData()
 				.getExecutionData(Long.valueOf(0x12345678), "Foo", 1)
 				.getProbes();
-		probes[0] = true;
+		probes[0] = 1;
 
 		agent.getExecutionData(false);
 
-		assertTrue(probes[0]);
+		assertTrue(probes[0] != 0);
 	}
 
 	@Test
