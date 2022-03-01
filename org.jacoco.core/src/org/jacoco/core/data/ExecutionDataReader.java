@@ -107,7 +107,6 @@ public class ExecutionDataReader {
 	protected boolean readBlock(final byte blocktype) throws IOException {
 		switch (blocktype) {
 		case ExecutionDataWriter.BLOCK_HEADER:
-			System.out.println("read header");
 			readHeader();
 			return true;
 		case ExecutionDataWriter.BLOCK_SESSIONINFO:
