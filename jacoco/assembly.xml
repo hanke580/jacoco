@@ -104,18 +104,18 @@
     <!--     <include>${project.groupId}:org.jacoco.examples:zip</include> -->
     <!--   </includes> -->
     <!-- </dependencySet> -->
-    <dependencySet>
-      <outputDirectory>/doc/api</outputDirectory>
-      <unpack>true</unpack>
-      <useProjectArtifact>false</useProjectArtifact>
-      <unpackOptions>
-        <excludes>
-          <exclude>META-INF/</exclude>
-        </excludes>
-      </unpackOptions>
-      <includes>
-        <include>${project.groupId}:org.jacoco.doc:*:javadoc</include>
-      </includes>
-    </dependencySet>
+    <!--   <dependencySet> -->
+    <!--     <outputDirectory>/doc/api</outputDirectory> -->
+    <!--     <unpack>true</unpack> -->
+    <!--     <useProjectArtifact>false</useProjectArtifact> -->
+    <!--     <unpackOptions> -->
+    <!--       <excludes> -->
+    <!--         <exclude>META-INF/</exclude> -->
+    <!--       </excludes> -->
+    <!--     </unpackOptions> -->
+    <!--     <includes> -->
+    <!--       <include>${project.groupId}:org.jacoco.doc:*:javadoc</include> -->
+    <!--     </includes> -->
+    <!--   </dependencySet> -->
   </dependencySets>
 </assembly>
