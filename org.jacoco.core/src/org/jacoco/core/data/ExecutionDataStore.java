@@ -92,6 +92,41 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	}
 
 	/**
+	 * Merges the probes in the given {@link ExecutionData} object from the
+	 * store. I.e. for all set probes in the given data object the corresponding
+	 * probes in this store will be unset. If there is no execution data with id
+	 * of the given data object this operation will have no effect.
+	 *
+	 * @param data
+	 *            execution data to merge
+	 * @throws IllegalStateException
+	 *             if the given {@link ExecutionData} object is not compatible
+	 *             to a corresponding one, that is already contained
+	 * @see ExecutionData#assertCompatibility(long, String, int)
+	 */
+	public void merge(final ExecutionData data) throws IllegalStateException {
+		final Long id = Long.valueOf(data.getId());
+		final ExecutionData entry = entries.get(id);
+		if (entry != null) {
+			entry.merge(data, true);
+		} else {
+			entries.put(id, data);
+		}
+	}
+
+	/**
+	 * Merges all probes in the given execution data store from this store.
+	 *
+	 * @param store
+	 *            execution data store to merge
+	 */
+	public void merge(final ExecutionDataStore store) {
+		for (final ExecutionData data : store.getContents()) {
+			merge(data);
+		}
+	}
+
+	/**
 	 * Returns the {@link ExecutionData} entry with the given id if it exists in
 	 * this store.
 	 *
