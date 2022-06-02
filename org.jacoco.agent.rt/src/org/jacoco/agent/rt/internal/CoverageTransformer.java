@@ -12,8 +12,14 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
@@ -65,7 +71,31 @@ public class CoverageTransformer implements ClassFileTransformer {
 		this.instrumenter = new Instrumenter(runtime);
 		this.logger = logger;
 		// Class names will be reported in VM notation:
-		includes = new WildcardMatcher(toVMName(options.getIncludes()));
+
+		// try use includes as a PATH
+		String includesString = null;
+		Path includesClassPath = Paths.get(options.getIncludes());
+		if (includesClassPath.toFile().exists()) {
+			try {
+				BufferedReader br = new BufferedReader(
+						new FileReader(includesClassPath.toFile()));
+				String className;
+				StringBuilder sb = new StringBuilder();
+				while ((className = br.readLine()) != null) {
+					sb.append(className + ":");
+				}
+				sb.deleteCharAt(sb.length() - 1);
+				includesString = sb.toString();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (includesString == null) {
+			includesString = options.getIncludes();
+		}
+		includes = new WildcardMatcher(toVMName(includesString));
 		excludes = new WildcardMatcher(toVMName(options.getExcludes()));
 		exclClassloader = new WildcardMatcher(options.getExclClassloader());
 		classFileDumper = new ClassFileDumper(options.getClassDumpDir());
