@@ -129,7 +129,6 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            execution data store to merge
 	 */
 	public void merge(final ExecutionDataStore store) { // W
-		System.out.println("\n\n[HKLOG] Using customized Jacoco Library1!");
 		synchronized (this) {
 			for (final ExecutionData data : store.getContents()) {
 				merge(data);
@@ -207,7 +206,9 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return current contents
 	 */
 	public Collection<ExecutionData> getContents() { // R
-		return new ArrayList<ExecutionData>(entries.values());
+		synchronized (this) {
+			return new ArrayList<ExecutionData>(entries.values());
+		}
 	}
 
 	/**
