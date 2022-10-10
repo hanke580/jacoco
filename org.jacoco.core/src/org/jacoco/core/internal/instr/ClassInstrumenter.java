@@ -18,12 +18,18 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
+import java.util.HashMap;
+
+import javax.management.loading.PrivateClassLoader;
+
 /**
  * Adapter that instruments a class for coverage tracing.
  */
 public class ClassInstrumenter extends ClassProbesVisitor {
 
 	private final IProbeArrayStrategy probeArrayStrategy;
+
+	private HashMap<String, Integer> functionWeightMap = new HashMap<String, Integer>();
 
 	private String className;
 
@@ -40,6 +46,12 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 			final ClassVisitor cv) {
 		super(cv);
 		this.probeArrayStrategy = probeArrayStrategy;
+	}
+
+	public ClassInstrumenter(final IProbeArrayStrategy probeArrayStrategy,
+			final ClassVisitor cv, HashMap<String, Integer> functionWeightMap) {
+		this(probeArrayStrategy, cv);
+		this.functionWeightMap = functionWeightMap;
 	}
 
 	@Override
@@ -70,9 +82,20 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 		if (mv == null) {
 			return null;
 		}
+
+		Integer weight;
+		if (functionWeightMap.containsKey(className + "#" + name)) {
+			weight = functionWeightMap.get(className + "#" + name);
+		} else {
+			weight = Integer.valueOf(1);
+		}
+
+		System.out.println("class instrument name: " + className
+				+ " method name: " + name + " weight: " + weight + "\n");
+
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
-				name, desc, frameEliminator, probeArrayStrategy);
+				name, desc, weight, frameEliminator, probeArrayStrategy);
 		return new MethodInstrumenter(probeVariableInserter,
 				probeVariableInserter);
 	}

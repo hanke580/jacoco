@@ -68,6 +68,14 @@ public final class AgentOptions {
 	public static final String EXCLUDES = "excludes";
 
 	/**
+	 * Path to the function weight file The function weight format is
+	 * ^CLASS_NAME#METHOD_NAME,WEIGHT$ Exmaple:
+	 * org/apache/commons/lang3/StringUtils#endsWithAny,5 We only support weight
+	 * in range [0-5] now.
+	 */
+	public static final String WEIGHTS = "weights";
+
+	/**
 	 * Wildcard expression for class loaders names for classes that should be
 	 * excluded from code coverage. This means all classes loaded by a class
 	 * loader which full qualified name matches this expression will be ignored
@@ -197,7 +205,7 @@ public final class AgentOptions {
 	public static final String JMX = "jmx";
 
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
-			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
+			DESTFILE, APPEND, INCLUDES, EXCLUDES, WEIGHTS, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
 			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
 
@@ -344,6 +352,27 @@ public final class AgentOptions {
 	 */
 	public void setExcludes(final String excludes) {
 		setOption(EXCLUDES, excludes);
+	}
+
+	/**
+	 * Returns the wildcard expression for classes to weight.
+	 *
+	 * @return wildcard expression for classes to weight
+	 * @see WildcardMatcher
+	 */
+	public String getWeights() {
+		return getOption(WEIGHTS, "");
+	}
+
+	/**
+	 * Sets the wildcard expression for classes to weight.
+	 *
+	 * @param weights
+	 *            wildcard expression for classes to weight
+	 * @see WildcardMatcher
+	 */
+	public void setWeights(final String weights) {
+		setOption(WEIGHTS, weights);
 	}
 
 	/**

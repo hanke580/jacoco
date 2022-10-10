@@ -72,6 +72,26 @@ public class CoverageTransformer implements ClassFileTransformer {
 		this.logger = logger;
 		// Class names will be reported in VM notation:
 
+		String weightsString = options.getWeights();
+		if (!weightsString.isEmpty()) {
+			Path weightsPath = Paths.get(weightsString);
+			try {
+				BufferedReader br = new BufferedReader(
+						new FileReader(weightsPath.toFile()));
+				String weight;
+				while ((weight = br.readLine()) != null) {
+					String[] weightComponents = weight.split(",");
+					instrumenter.functionWeightMap.put(weightComponents[0],
+							Integer.valueOf(weightComponents[1]));
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 		// try use includes as a PATH
 		String includesString = null;
 		Path includesClassPath = Paths.get(options.getIncludes());

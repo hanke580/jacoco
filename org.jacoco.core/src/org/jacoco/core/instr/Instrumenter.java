@@ -38,6 +38,7 @@ import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+import java.util.HashMap;
 
 /**
  * Several APIs to instrument Java class definitions for coverage tracing.
@@ -47,6 +48,8 @@ public class Instrumenter {
 	private final IExecutionDataAccessorGenerator accessorGenerator;
 
 	private final SignatureRemover signatureRemover;
+
+	public HashMap<String, Integer> functionWeightMap = new HashMap<String, Integer>();
 
 	/**
 	 * Creates a new instance based on the given runtime.
@@ -86,7 +89,7 @@ public class Instrumenter {
 				.createFor(classId, reader, accessorGenerator);
 		final int version = InstrSupport.getMajorVersion(reader);
 		final ClassVisitor visitor = new ClassProbesAdapter(
-				new ClassInstrumenter(strategy, writer),
+				new ClassInstrumenter(strategy, writer, functionWeightMap),
 				InstrSupport.needsFrames(version));
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();

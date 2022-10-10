@@ -44,6 +44,9 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	/** Maximum stack usage of the code to access the probe array. */
 	private int accessorStackSize;
 
+	/** The probe weight inside the method */
+	private int weight;
+
 	/**
 	 * Creates a new {@link ProbeInserter}.
 	 *
@@ -70,6 +73,13 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		}
 		variable = pos;
 		beginLabel = new Label();
+	}
+
+	ProbeInserter(final int access, final String name, final String desc,
+			final int weight, final MethodVisitor mv,
+			final IProbeArrayStrategy arrayStrategy) {
+		this(access, name, desc, mv, arrayStrategy);
+		this.weight = weight;
 	}
 
 	public void insertProbe(final int id) {
@@ -99,9 +109,37 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// Stack[1]: I id
 		// Stack[0]: [I probe[]
 
-		mv.visitInsn(Opcodes.ICONST_1);
+		switch (weight) {
+		case 0: {
+			mv.visitInsn(Opcodes.ICONST_0);
+			break;
+		}
+		case 1: {
+			mv.visitInsn(Opcodes.ICONST_1);
+			break;
+		}
+		case 2: {
+			mv.visitInsn(Opcodes.ICONST_2);
+			break;
+		}
+		case 3: {
+			mv.visitInsn(Opcodes.ICONST_3);
+			break;
+		}
+		case 4: {
+			mv.visitInsn(Opcodes.ICONST_4);
+			break;
+		}
+		case 5: {
+			mv.visitInsn(Opcodes.ICONST_5);
+			break;
+		}
+		default: {
+			mv.visitIntInsn(Opcodes.BIPUSH, weight);
+		}
+		}
 
-		// Stack[3]: I 1
+		// Stack[3]: I $weight
 		// Stack[2]: I probe[id]
 		// Stack[1]: I id
 		// Stack[0]: [I probe[]
