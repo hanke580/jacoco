@@ -45,14 +45,16 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *             to a corresponding one, that is already contained
 	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
-	public void put(final ExecutionData data) throws IllegalStateException {
-		final Long id = Long.valueOf(data.getId());
-		final ExecutionData entry = entries.get(id);
-		if (entry == null) {
-			entries.put(id, data);
-			names.add(data.getName());
-		} else {
-			entry.merge(data);
+	public void put(final ExecutionData data) throws IllegalStateException { // W
+		synchronized (this) {
+			final Long id = Long.valueOf(data.getId());
+			final ExecutionData entry = entries.get(id);
+			if (entry == null) {
+				entries.put(id, data);
+				names.add(data.getName());
+			} else {
+				entry.merge(data);
+			}
 		}
 	}
 
@@ -69,12 +71,14 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *             to a corresponding one, that is already contained
 	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
-	public void subtract(final ExecutionData data)
+	public void subtract(final ExecutionData data) // W
 			throws IllegalStateException {
-		final Long id = Long.valueOf(data.getId());
-		final ExecutionData entry = entries.get(id);
-		if (entry != null) {
-			entry.merge(data, false);
+		synchronized (this) {
+			final Long id = Long.valueOf(data.getId());
+			final ExecutionData entry = entries.get(id);
+			if (entry != null) {
+				entry.merge(data, false);
+			}
 		}
 	}
 
@@ -85,9 +89,11 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            execution data store to subtract
 	 * @see #subtract(ExecutionData)
 	 */
-	public void subtract(final ExecutionDataStore store) {
-		for (final ExecutionData data : store.getContents()) {
-			subtract(data);
+	public void subtract(final ExecutionDataStore store) { // W
+		synchronized (this) {
+			for (final ExecutionData data : store.getContents()) {
+				subtract(data);
+			}
 		}
 	}
 
@@ -104,13 +110,15 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *             to a corresponding one, that is already contained
 	 * @see ExecutionData#assertCompatibility(long, String, int)
 	 */
-	public void merge(final ExecutionData data) throws IllegalStateException {
-		final Long id = Long.valueOf(data.getId());
-		final ExecutionData entry = entries.get(id);
-		if (entry != null) {
-			entry.merge(data, true);
-		} else {
-			entries.put(id, data);
+	public void merge(final ExecutionData data) throws IllegalStateException { // W
+		synchronized (this) {
+			final Long id = Long.valueOf(data.getId());
+			final ExecutionData entry = entries.get(id);
+			if (entry != null) {
+				entry.merge(data, true);
+			} else {
+				entries.put(id, data);
+			}
 		}
 	}
 
@@ -120,9 +128,11 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @param store
 	 *            execution data store to merge
 	 */
-	public void merge(final ExecutionDataStore store) {
-		for (final ExecutionData data : store.getContents()) {
-			merge(data);
+	public void merge(final ExecutionDataStore store) { // W
+		synchronized (this) {
+			for (final ExecutionData data : store.getContents()) {
+				merge(data);
+			}
 		}
 	}
 
@@ -134,7 +144,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *            class id
 	 * @return execution data or <code>null</code>
 	 */
-	public ExecutionData get(final long id) {
+	public ExecutionData get(final long id) { // R
 		return entries.get(Long.valueOf(id));
 	}
 
@@ -147,7 +157,7 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return <code>true</code> if at least one class with the name is
 	 *         contained.
 	 */
-	public boolean contains(final String name) {
+	public boolean contains(final String name) { // R
 		return names.contains(name);
 	}
 
@@ -164,25 +174,29 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @return execution data
 	 */
 	public ExecutionData get(final Long id, final String name,
-			final int probecount) {
-		ExecutionData entry = entries.get(id);
-		if (entry == null) {
-			entry = new ExecutionData(id.longValue(), name, probecount);
-			entries.put(id, entry);
-			names.add(name);
-		} else {
-			entry.assertCompatibility(id.longValue(), name, probecount);
+			final int probecount) { // W
+		synchronized (this) {
+			ExecutionData entry = entries.get(id);
+			if (entry == null) {
+				entry = new ExecutionData(id.longValue(), name, probecount);
+				entries.put(id, entry);
+				names.add(name);
+			} else {
+				entry.assertCompatibility(id.longValue(), name, probecount);
+			}
+			return entry;
 		}
-		return entry;
 	}
 
 	/**
 	 * Resets all execution data probes, i.e. marks them as not executed. The
 	 * execution data objects itself are not removed.
 	 */
-	public void reset() {
-		for (final ExecutionData executionData : this.entries.values()) {
-			executionData.reset();
+	public void reset() { // ? Not sure
+		synchronized (this) {
+			for (final ExecutionData executionData : this.entries.values()) {
+				executionData.reset();
+			}
 		}
 	}
 
@@ -191,8 +205,10 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 *
 	 * @return current contents
 	 */
-	public Collection<ExecutionData> getContents() {
-		return new ArrayList<ExecutionData>(entries.values());
+	public Collection<ExecutionData> getContents() { // R
+		synchronized (this) {
+			return new ArrayList<ExecutionData>(entries.values());
+		}
 	}
 
 	/**
@@ -201,15 +217,19 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @param visitor
 	 *            interface to write content to
 	 */
-	public void accept(final IExecutionDataVisitor visitor) {
-		for (final ExecutionData data : getContents()) {
-			visitor.visitClassExecution(data);
+	public void accept(final IExecutionDataVisitor visitor) { // W
+		synchronized (this) {
+			for (final ExecutionData data : getContents()) {
+				visitor.visitClassExecution(data);
+			}
 		}
 	}
 
 	// === IExecutionDataVisitor ===
 
-	public void visitClassExecution(final ExecutionData data) {
-		put(data);
+	public void visitClassExecution(final ExecutionData data) { // W
+		synchronized (this) {
+			put(data);
+		}
 	}
 }
