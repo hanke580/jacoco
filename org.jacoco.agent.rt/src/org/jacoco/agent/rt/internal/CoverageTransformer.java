@@ -80,6 +80,8 @@ public class CoverageTransformer implements ClassFileTransformer {
 						new FileReader(weightsPath.toFile()));
 				String weight;
 				while ((weight = br.readLine()) != null) {
+					if (weight.isEmpty())
+						continue;
 					String[] weightComponents = weight.split(",");
 					instrumenter.functionWeightMap.put(weightComponents[0],
 							Integer.valueOf(weightComponents[1]));
