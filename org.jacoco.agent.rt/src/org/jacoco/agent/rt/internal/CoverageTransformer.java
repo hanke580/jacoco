@@ -74,6 +74,7 @@ public class CoverageTransformer implements ClassFileTransformer {
 
 		String weightsString = options.getWeights();
 		if (!weightsString.isEmpty()) {
+			System.out.println("Jacoco weight file: " + weightsString);
 			Path weightsPath = Paths.get(weightsString);
 			try {
 				BufferedReader br = new BufferedReader(

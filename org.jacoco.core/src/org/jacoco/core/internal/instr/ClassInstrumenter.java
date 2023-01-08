@@ -90,8 +90,8 @@ public class ClassInstrumenter extends ClassProbesVisitor {
 			weight = Integer.valueOf(1);
 		}
 
-		System.out.println("class instrument name: " + className
-				+ " method name: " + name + " weight: " + weight + "\n");
+		// System.out.println("class instrument name: " + className
+		// + " method name: " + name + " weight: " + weight + "\n");
 
 		final MethodVisitor frameEliminator = new DuplicateFrameEliminator(mv);
 		final ProbeInserter probeVariableInserter = new ProbeInserter(access,
