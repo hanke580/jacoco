@@ -121,6 +121,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			final String className, final String accessFieldName)
 			throws ClassNotFoundException {
 		final ClassFileTransformer transformer = new ClassFileTransformer() {
+			@Override
 			public byte[] transform(final ClassLoader loader, final String name,
 					final Class<?> classBeingRedefined,
 					final ProtectionDomain protectionDomain,

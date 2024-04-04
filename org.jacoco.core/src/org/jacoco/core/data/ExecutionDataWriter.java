@@ -86,6 +86,7 @@ public class ExecutionDataWriter
 		out.flush();
 	}
 
+	@Override
 	public void visitSessionInfo(final SessionInfo info) {
 		try {
 			out.writeByte(BLOCK_SESSIONINFO);
@@ -97,6 +98,7 @@ public class ExecutionDataWriter
 		}
 	}
 
+	@Override
 	public void visitClassExecution(final ExecutionData data) {
 		if (data.hasHits()) {
 			try {

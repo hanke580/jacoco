@@ -95,8 +95,12 @@ class TcpConnection implements IRemoteCommandVisitor {
 		}
 	}
 
-	// === IRemoteCommandVisitor ===
+	public void writeSessionInfo() {
+		data.writeSessionInfo(writer);
+	}
 
+	// === IRemoteCommandVisitor ===
+	@Override
 	public void visitDumpCommand(final boolean dump, final boolean reset)
 			throws IOException {
 		if (dump) {

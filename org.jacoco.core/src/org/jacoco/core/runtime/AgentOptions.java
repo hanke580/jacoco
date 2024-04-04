@@ -145,6 +145,13 @@ public final class AgentOptions {
 		tcpclient,
 
 		/**
+		 * Value for the {@link AgentOptions#OUTPUT} parameter: At startup the
+		 * agent connects to a DFE port specified by the
+		 * {@link AgentOptions#ADDRESS} and {@link AgentOptions#PORT} attribute.
+		 */
+		dfe,
+
+		/**
 		 * Value for the {@link AgentOptions#OUTPUT} parameter: Do not produce
 		 * any output.
 		 */

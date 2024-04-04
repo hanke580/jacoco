@@ -25,6 +25,7 @@ public abstract class AbstractRuntime implements IRuntime {
 	/**
 	 * Subclasses must call this method when overwriting it.
 	 */
+	@Override
 	public void startup(final RuntimeData data) throws Exception {
 		this.data = data;
 	}

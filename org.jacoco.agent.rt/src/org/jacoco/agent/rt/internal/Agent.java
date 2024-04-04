@@ -22,6 +22,7 @@ import org.jacoco.agent.rt.internal.output.FileOutput;
 import org.jacoco.agent.rt.internal.output.IAgentOutput;
 import org.jacoco.agent.rt.internal.output.NoneOutput;
 import org.jacoco.agent.rt.internal.output.TcpClientOutput;
+import org.jacoco.agent.rt.internal.output.TcpDfeOutput;
 import org.jacoco.agent.rt.internal.output.TcpServerOutput;
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.data.ExecutionDataWriter;
@@ -167,6 +168,8 @@ public class Agent implements IAgent {
 			return new TcpServerOutput(logger);
 		case tcpclient:
 			return new TcpClientOutput(logger);
+		case dfe:
+			return new TcpDfeOutput(logger);
 		case none:
 			return new NoneOutput();
 		default:
