@@ -25,11 +25,10 @@ import org.objectweb.asm.Opcodes;
  * runtime.
  */
 public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
-
 	/**
 	 * Descriptor of the bootstrap method.
 	 */
-	public static final String B_DESC = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z";
+	public static final String B_DESC = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[I";
 
 	private final String className;
 
@@ -56,7 +55,7 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
 		// constant should have type Object
 		mv.visitLdcInsn(new ConstantDynamic(InstrSupport.DATAFIELD_NAME,
 				"Ljava/lang/Object;", bootstrapMethod));
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "[Z");
+		mv.visitTypeInsn(Opcodes.CHECKCAST, "[I");
 		mv.visitVarInsn(Opcodes.ASTORE, variable);
 		return 1;
 	}
@@ -70,5 +69,4 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
 		mv.visitMaxs(maxStack, 3);
 		mv.visitEnd();
 	}
-
 }

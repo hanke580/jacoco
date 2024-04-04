@@ -1,0 +1,96 @@
+From 1da2fa1ac617a7d494ff0b3c4c1ac69cc6d62b2d Mon Sep 17 00:00:00 2001
+From: Yayu Wang <st.saint.wyy@gmail.com>
+Date: Thu, 4 Apr 2024 15:44:20 -0700
+Subject: [PATCH] fix: int probe for java>=11
+
+Chagne CondyProbeArrayStrategy DESC from `[Z` to `[I`
+---
+ .../instr/ClassFieldProbeArrayStrategy.java      | 16 ++++++++--------
+ .../internal/instr/CondyProbeArrayStrategy.java  |  6 ++----
+ 2 files changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/org.jacoco.core/src/org/jacoco/core/internal/instr/ClassFieldProbeArrayStrategy.java b/org.jacoco.core/src/org/jacoco/core/internal/instr/ClassFieldProbeArrayStrategy.java
+index 45d3c798..88858652 100644
+--- a/org.jacoco.core/src/org/jacoco/core/internal/instr/ClassFieldProbeArrayStrategy.java
++++ b/org.jacoco.core/src/org/jacoco/core/internal/instr/ClassFieldProbeArrayStrategy.java
+@@ -80,19 +80,19 @@ class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
+ 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+ 		mv.visitInsn(Opcodes.DUP);
+ 
+-		// Stack[1]: [Z
+-		// Stack[0]: [Z
++		// Stack[1]: [I
++		// Stack[0]: [I
+ 
+ 		// Skip initialization when we already have a data array:
+ 		final Label alreadyInitialized = new Label();
+ 		mv.visitJumpInsn(Opcodes.IFNONNULL, alreadyInitialized);
+ 
+-		// Stack[0]: [Z
++		// Stack[0]: [I
+ 
+ 		mv.visitInsn(Opcodes.POP);
+ 		final int size = genInitializeDataField(mv, probeCount);
+ 
+-		// Stack[0]: [Z
++		// Stack[0]: [I
+ 
+ 		// Return the class' probe array:
+ 		if (withFrames) {
+@@ -120,17 +120,17 @@ class ClassFieldProbeArrayStrategy implements IProbeArrayStrategy {
+ 		final int size = accessorGenerator.generateDataAccessor(classId,
+ 				className, probeCount, mv);
+ 
+-		// Stack[0]: [Z
++		// Stack[0]: [I
+ 
+ 		mv.visitInsn(Opcodes.DUP);
+ 
+-		// Stack[1]: [Z
+-		// Stack[0]: [Z
++		// Stack[1]: [I
++		// Stack[0]: [I
+ 
+ 		mv.visitFieldInsn(Opcodes.PUTSTATIC, className,
+ 				InstrSupport.DATAFIELD_NAME, InstrSupport.DATAFIELD_DESC);
+ 
+-		// Stack[0]: [Z
++		// Stack[0]: [I
+ 
+ 		return Math.max(size, 2); // Maximum local stack size is 2
+ 	}
+diff --git a/org.jacoco.core/src/org/jacoco/core/internal/instr/CondyProbeArrayStrategy.java b/org.jacoco.core/src/org/jacoco/core/internal/instr/CondyProbeArrayStrategy.java
+index c3c1ea2a..c21d6683 100644
+--- a/org.jacoco.core/src/org/jacoco/core/internal/instr/CondyProbeArrayStrategy.java
++++ b/org.jacoco.core/src/org/jacoco/core/internal/instr/CondyProbeArrayStrategy.java
+@@ -25,11 +25,10 @@ import org.objectweb.asm.Opcodes;
+  * runtime.
+  */
+ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
+-
+ 	/**
+ 	 * Descriptor of the bootstrap method.
+ 	 */
+-	public static final String B_DESC = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[Z";
++	public static final String B_DESC = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/Class;)[I";
+ 
+ 	private final String className;
+ 
+@@ -56,7 +55,7 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
+ 		// constant should have type Object
+ 		mv.visitLdcInsn(new ConstantDynamic(InstrSupport.DATAFIELD_NAME,
+ 				"Ljava/lang/Object;", bootstrapMethod));
+-		mv.visitTypeInsn(Opcodes.CHECKCAST, "[Z");
++		mv.visitTypeInsn(Opcodes.CHECKCAST, "[I");
+ 		mv.visitVarInsn(Opcodes.ASTORE, variable);
+ 		return 1;
+ 	}
+@@ -70,5 +69,4 @@ public class CondyProbeArrayStrategy implements IProbeArrayStrategy {
+ 		mv.visitMaxs(maxStack, 3);
+ 		mv.visitEnd();
+ 	}
+-
+ }
+-- 
+2.43.0
+
