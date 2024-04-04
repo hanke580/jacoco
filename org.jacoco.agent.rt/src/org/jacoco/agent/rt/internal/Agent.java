@@ -14,7 +14,12 @@ package org.jacoco.agent.rt.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.net.InetAddress;
+import java.util.List;
+import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 import org.jacoco.agent.rt.IAgent;
@@ -114,6 +119,53 @@ public class Agent implements IAgent {
 	}
 
 	/**
+	 * get the main class name of running jvm
+	 *
+	 * @return Main Class in string
+	 */
+	public static String getMainClassName() {
+		String sunJavaCommand = System.getProperty("sun.java.command");
+		if (sunJavaCommand != null) {
+			return sunJavaCommand.split(" ")[0];
+		}
+		return null;
+
+		// FIXME we cannot use thread to get Main Class since in Premain method
+		// the main class is not initilized yet
+		// for (Entry<Thread, StackTraceElement[]> entry : Thread
+		// .getAllStackTraces().entrySet()) {
+		// Thread thread = entry.getKey();
+		// System.out.println("\n\n\n" + thread.getThreadGroup().getName());
+		// if (thread.getThreadGroup() != null
+		// && thread.getThreadGroup().getName().equals("main")) {
+		// for (StackTraceElement stackTraceElement : entry.getValue()) {
+		// System.out.println(stackTraceElement.getClassName() + " "
+		// + stackTraceElement.getMethodName() + " "
+		// + stackTraceElement.getFileName() + "\n\n");
+		// if (stackTraceElement.getMethodName().equals("main")) {
+
+		// try {
+		// Class<?> c = Class
+		// .forName(stackTraceElement.getClassName());
+		// Class[] argTypes = new Class[] { String[].class };
+		// // This will throw NoSuchMethodException in case of
+		// // fake main methods
+		// c.getDeclaredMethod("main", argTypes);
+		// System.out.println("FIND MAIN CLASS: "
+		// + stackTraceElement.getClassName());
+		// return stackTraceElement.getClassName();
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// return null;
+		// }
+		// }
+		// }
+		// }
+		// }
+		// return null;
+	}
+
+	/**
 	 * Initializes this agent.
 	 *
 	 * @throws Exception
@@ -124,6 +176,8 @@ public class Agent implements IAgent {
 			String sessionId = options.getSessionId();
 			if (sessionId == null) {
 				sessionId = createSessionId();
+			} else {
+				sessionId = sessionId + "-" + getMainClassName();
 			}
 			data.setSessionId(sessionId);
 			output = createAgentOutput();
